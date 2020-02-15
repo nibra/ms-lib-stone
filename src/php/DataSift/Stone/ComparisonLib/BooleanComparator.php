@@ -44,7 +44,7 @@
 namespace DataSift\Stone\ComparisonLib;
 
 /**
- * Support for comparing null values against other data
+ * Support for comparing boolean values against other data
  *
  * @category  Libraries
  * @package   Stone/ComparisonLib
@@ -53,7 +53,7 @@ namespace DataSift\Stone\ComparisonLib;
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://datasift.github.io/stone
  */
-class NullComparitor extends ComparitorBase
+class BooleanComparator extends ComparatorBase
 {
 	// ==================================================================
 	//
@@ -62,7 +62,7 @@ class NullComparitor extends ComparitorBase
 	// ------------------------------------------------------------------
 
 	/**
-	 * is our test value really a null?
+	 * is our test value really a boolean?
 	 *
 	 * @return ComparisonResult
 	 */
@@ -71,9 +71,9 @@ class NullComparitor extends ComparitorBase
 		// our return object
 		$result = new ComparisonResult();
 
-		// is it _really_ a null?
-		if (!is_null($this->value)) {
-			$result->setHasFailed("null", gettype($this->value));
+		// is it _really_ a boolean?
+		if (!is_bool($this->value)) {
+			$result->setHasFailed("boolean", gettype($this->value));
 			return $result;
 		}
 
@@ -91,12 +91,60 @@ class NullComparitor extends ComparitorBase
 	// ------------------------------------------------------------------
 
 	/**
-	  * is this null a real null?
+	  * is this boolean a real boolean?
       *
       * @return ComparisonResult
       */
-    public function isNull()
+    public function isBoolean()
     {
 		return $this->isExpectedType();
+	}
+
+	/**
+	 * is this boolean 'true'?
+	 *
+	 * @return ComparisonResult
+	 */
+	public function isTrue()
+	{
+		// do we have a valid value to test?
+		$result = $this->isNotNull();
+		if ($result->hasFailed()) {
+			return $result;
+		}
+
+		// is our value true?
+		if (!$this->value) {
+			$result->setHasFailed("true", "false");
+			return $result;
+		}
+
+		// if we get here, then the value is true
+		// an the comparison is successful
+		return $result;
+	}
+
+	/**
+	 * is the boolean 'false'?
+	 *
+	 * @return ComparisonResult
+	 */
+	public function isFalse()
+	{
+		// do we have a valid value to test?
+		$result = $this->isNotNull();
+		if ($result->hasFailed()) {
+			return $result;
+		}
+
+		// is our value false?
+		if ($this->value) {
+			$result->setHasFailed("false", "true");
+			return $result;
+		}
+
+		// if we get here, then the value is false,
+		// and the comparison is successful
+		return $result;
 	}
 }

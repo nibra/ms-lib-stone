@@ -53,7 +53,7 @@ namespace DataSift\Stone\ComparisonLib;
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://datasift.github.io/stone
  */
-class ArrayComparitor extends ComparitorBase
+class ArrayComparator extends ComparatorBase
 {
 	// ==================================================================
 	//

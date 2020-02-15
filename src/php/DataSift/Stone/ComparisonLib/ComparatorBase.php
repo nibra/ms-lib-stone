@@ -55,7 +55,7 @@ use DataSift\Stone\DataLib\DataPrinter;
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://datasift.github.io/stone
  */
-abstract class ComparitorBase
+abstract class ComparatorBase
 {
 	/**
 	 * the value that we will be comparing against
