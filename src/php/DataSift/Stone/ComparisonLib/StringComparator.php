@@ -55,346 +55,384 @@ namespace DataSift\Stone\ComparisonLib;
  */
 class StringComparator extends ComparatorBase
 {
-	// ==================================================================
-	//
-	// Helper methods
-	//
-	// ------------------------------------------------------------------
+    // ==================================================================
+    //
+    // Helper methods
+    //
+    // ------------------------------------------------------------------
 
-	/**
-	 * is the data that we're examining a string?
-	 *
-	 * @return ComparisonResult
-	 */
-	public function isExpectedType()
-	{
-		// keep track of what happened
-		$result = new ComparisonResult();
+    /**
+     * is the data that we're examining a string?
+     *
+     * @return ComparisonResult
+     */
+    public function isExpectedType()
+    {
+        // keep track of what happened
+        $result = new ComparisonResult();
 
-		$string = $this->value;
+        $string = $this->value;
 
-		if (!is_string($string)) {
-			$result->setHasFailed("string", gettype($string));
-			return $result;
-		}
+        if (!is_string($string)) {
+            $result->setHasFailed("string", gettype($string));
 
-		// all done
-		$result->setHasPassed();
-		return $result;
-	}
+            return $result;
+        }
 
-	// ==================================================================
-	//
-	// The comparisons that this data type supports
-	//
-	// ------------------------------------------------------------------
+        // all done
+        $result->setHasPassed();
 
-	/**
-	 * Does our string end with a given string?
-	 *
-	 * @param  string $expected the expected ending
-	 * @return ComparisonResult
-	 */
-	public function endsWith($expected)
-	{
-		// do we have a string to test?
-		$result = $this->isExpectedType();
-		if ($result->hasFailed()) {
-			return $result;
-		}
+        return $result;
+    }
 
-		// is our string at least as long as the expected ending?
-		if (strlen($this->value) < strlen($expected)) {
-			$result->setHasFailed("ends with '{$expected}'", "string too short");
-			return $result;
-		}
+    // ==================================================================
+    //
+    // The comparisons that this data type supports
+    //
+    // ------------------------------------------------------------------
 
-		// get the ending
-		$ending = substr($this->value, 0-strlen($expected));
+    /**
+     * Does our string end with a given string?
+     *
+     * @param string $expected the expected ending
+     *
+     * @return ComparisonResult
+     */
+    public function endsWith($expected)
+    {
+        // do we have a string to test?
+        $result = $this->isExpectedType();
+        if ($result->hasFailed()) {
+            return $result;
+        }
 
-		// is it what we expected?
-		if ($ending != $expected) {
-			$result->setHasFailed("ends with '{$expected}'", "ends with '{$ending}'");
-			return $result;
-		}
+        // is our string at least as long as the expected ending?
+        if (strlen($this->value) < strlen($expected)) {
+            $result->setHasFailed("ends with '{$expected}'", "string too short");
 
-		// success
-		return $result;
-	}
+            return $result;
+        }
 
-	/**
-	 * does our string NOT end with a given string?
-	 *
-	 * @param  string $expected the ending we do not expect
-	 * @return ComparisonResult
-	 */
-	public function doesNotEndWith($expected)
-	{
-		// do we have a string to test?
-		$result = $this->isExpectedType();
-		if ($result->hasFailed()) {
-			return $result;
-		}
+        // get the ending
+        $ending = substr($this->value, 0 - strlen($expected));
 
-		// is our string at least as long as the expected ending?
-		if (strlen($this->value) < strlen($expected)) {
-			// string is too short, cannot possibly end with the expected string
-			return $result;
-		}
+        // is it what we expected?
+        if ($ending != $expected) {
+            $result->setHasFailed("ends with '{$expected}'", "ends with '{$ending}'");
 
-		// get the ending
-		$ending = substr($this->value, 0-strlen($expected));
+            return $result;
+        }
 
-		// is it what we expected?
-		if ($ending == $expected) {
-			$result->setHasFailed("does not end with '{$expected}'", "ends with '{$ending}'");
-			return $result;
-		}
+        // success
+        return $result;
+    }
 
-		// success - the endings are different
-		return $result;
-	}
+    /**
+     * does our string NOT end with a given string?
+     *
+     * @param string $expected the ending we do not expect
+     *
+     * @return ComparisonResult
+     */
+    public function doesNotEndWith($expected)
+    {
+        // do we have a string to test?
+        $result = $this->isExpectedType();
+        if ($result->hasFailed()) {
+            return $result;
+        }
 
-	/**
-	 * is the data that we're examining a hexadecimal string of some kind?
-	 *
-	 * @return ComparisonResult
-	 */
-	public function isHash($expectedLength = null)
-	{
-		// do we have a non-empty string to start off with?
-		$result = $this->isNotEmpty();
-		if ($result->hasFailed()) {
-			return $result;
-		}
+        // is our string at least as long as the expected ending?
+        if (strlen($this->value) < strlen($expected)) {
+            // string is too short, cannot possibly end with the expected string
+            return $result;
+        }
 
-		// let's make sure it is a hash
-		$match = preg_match("/^[A-Fa-f0-9]+$/", $this->value);
-		if (!$match) {
-			$result->setHasFailed("valid hex string", "contains non-hex character(s)");
-			return $result;
-		}
+        // get the ending
+        $ending = substr($this->value, 0 - strlen($expected));
 
-		// let's make sure it's the right length
-		$length = strlen($this->value);
-		if ($length % 2 != 0) {
-			$result->setHasFailed("valid hex string of even length", "string of odd length {$length}");
-			return $result;
-		}
+        // is it what we expected?
+        if ($ending == $expected) {
+            $result->setHasFailed("does not end with '{$expected}'", "ends with '{$ending}'");
 
-		// have we been told how long the hash should be (e.g. 32 characters)?
-		if ($expectedLength !== null) {
-			if ($length != $expectedLength) {
-				$result->setHasFailed("valid hex string of length {$expectedLength}", "string of length {$length}");
-				return $result;
-			}
-		}
+            return $result;
+        }
 
-		// success
-		return $result;
-	}
+        // success - the endings are different
+        return $result;
+    }
 
-	/**
-	 * is the data that we're examining a Universally-Unique-ID?
-	 *
-	 * @return ComparisonResult
-	 */
-	public function isUuid()
-	{
-		// do we have a non-empty string to start off with?
-		$result = $this->isNotEmpty();
-		if ($result->hasFailed()) {
-			return $result;
-		}
+    /**
+     * is the data that we're examining a hexadecimal string of some kind?
+     *
+     * @return ComparisonResult
+     */
+    public function isHash($expectedLength = null)
+    {
+        // do we have a non-empty string to start off with?
+        $result = $this->isNotEmpty();
+        if ($result->hasFailed()) {
+            return $result;
+        }
 
-		// let's make sure it is a hash with the dashes in the
-		// correct places
-		$match = preg_match("/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/", $this->value);
-		if (!$match) {
-			$result->setHasFailed("valid UUID-format hex string", "not a UUID-format string");
-			return $result;
-		}
+        // let's make sure it is a hash
+        $match = preg_match("/^[A-Fa-f0-9]+$/", $this->value);
+        if (!$match) {
+            $result->setHasFailed("valid hex string", "contains non-hex character(s)");
 
-		// success
-		return $result;
-	}
+            return $result;
+        }
 
-	/**
-	 * does our string contain valid JSON?
-	 *
-	 * @return ComparisonResult
-	 */
-	public function isValidJson()
-	{
-		// do we have a string to start off with?
-		$result = $this->isExpectedType();
-		if ($result->hasFailed()) {
-			return $result;
-		}
+        // let's make sure it's the right length
+        $length = strlen($this->value);
+        if ($length % 2 != 0) {
+            $result->setHasFailed("valid hex string of even length", "string of odd length {$length}");
 
-		// convert from JSON
-		$obj = json_decode((string)$this->value);
+            return $result;
+        }
 
-		// what happened?
-		if (!is_object($obj) && !(is_array($obj))) {
-			$result->setHasFailed("valid JSON string", "string failed to decode");
-			return $result;
-		}
+        // have we been told how long the hash should be (e.g. 32 characters)?
+        if ($expectedLength !== null) {
+            if ($length != $expectedLength) {
+                $result->setHasFailed("valid hex string of length {$expectedLength}", "string of length {$length}");
 
-		// if we get here, then success!
-		return $result;
-	}
+                return $result;
+            }
+        }
 
-	/**
-	 * does our string NOT contain valid JSON?
-	 *
-	 * @return ComparisonResult
-	 */
-	public function isNotValidJson()
-	{
-		// does our string contain valid JSON?
-		$result = $this->isValidJson();
+        // success
+        return $result;
+    }
 
-		// negate the result
-		if ($result->hasPassed()) {
-			$result->setHasFailed("invalid JSON string", "valid JSON string");
-		}
-		else {
-			$result->setHasPassed();
-		}
+    /**
+     * is the data that we're examining a Universally-Unique-ID?
+     *
+     * @return ComparisonResult
+     */
+    public function isUuid()
+    {
+        // do we have a non-empty string to start off with?
+        $result = $this->isNotEmpty();
+        if ($result->hasFailed()) {
+            return $result;
+        }
 
-		// all done
-		return $result;
-	}
+        // let's make sure it is a hash with the dashes in the
+        // correct places
+        $match = preg_match("/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/",
+            $this->value);
+        if (!$match) {
+            $result->setHasFailed("valid UUID-format hex string", "not a UUID-format string");
 
-	/**
-	 * is our value under test really a string?
-	 *
-	 * @return ComparisonResult
-	 */
-	public function isString()
-	{
-		return $this->isExpectedType();
-	}
+            return $result;
+        }
 
-	/**
-	 * currently not implemented
-	 *
-	 * @param  string $regex
-	 *         the PCRE regex to test against
-	 * @return ComparisonResult
-	 */
-	public function matchesRegex($regex)
-	{
+        // success
+        return $result;
+    }
 
-	}
+    /**
+     * does our string contain valid JSON?
+     *
+     * @return ComparisonResult
+     */
+    public function isValidJson()
+    {
+        // do we have a string to start off with?
+        $result = $this->isExpectedType();
+        if ($result->hasFailed()) {
+            return $result;
+        }
 
-	/**
-	 * currently not implemented
-	 *
-	 * @param  string $regex
-	 *         the PCRE regex to test against
-	 * @return ComparisonResult
-	 */
-	public function doesNotMatchRegex($regex)
-	{
+        // convert from JSON
+        $obj = json_decode((string)$this->value);
 
-	}
+        // what happened?
+        if (!is_object($obj) && !(is_array($obj))) {
+            $result->setHasFailed("valid JSON string", "string failed to decode");
 
-	/**
-	 * does our string start with an expected string?
-	 *
-	 * @param  string $expected the string we expect to start with
-	 * @return ComparisonResult
-	 */
-	public function startsWith($expected)
-	{
-		// do we have a string to test?
-		$result = $this->isExpectedType();
-		if ($result->hasFailed()) {
-			return $result;
-		}
+            return $result;
+        }
 
-		// is our string at least as long as the expected ending?
-		if (strlen($this->value) < strlen($expected)) {
-			$result->setHasFailed("starts with '{$expected}'", "string too short");
-			return $result;
-		}
+        // if we get here, then success!
+        return $result;
+    }
 
-		// get the beginning
-		$start = substr($this->value, 0, strlen($expected));
+    /**
+     * does our string NOT contain valid JSON?
+     *
+     * @return ComparisonResult
+     */
+    public function isNotValidJson()
+    {
+        // does our string contain valid JSON?
+        $result = $this->isValidJson();
 
-		// is it what we expected?
-		if ($start != $expected) {
-			$result->setHasFailed("starts with '{$expected}'", "starts with '{$start}'");
-			return $result;
-		}
+        // negate the result
+        if ($result->hasPassed()) {
+            $result->setHasFailed("invalid JSON string", "valid JSON string");
+        } else {
+            $result->setHasPassed();
+        }
 
-		// success
-		return $result;
+        // all done
+        return $result;
+    }
 
-	}
+    /**
+     * is our value under test really a string?
+     *
+     * @return ComparisonResult
+     */
+    public function isString()
+    {
+        return $this->isExpectedType();
+    }
 
-	/**
-	 * does our string NOT start with an expected string?
-	 *
-	 * @param  string $expected the string we do NOT expect to start with
-	 * @return ComparisonResult
-	 */
-	public function doesNotStartWith($expected)
-	{
-		// do we have a string to test?
-		$result = $this->isExpectedType();
-		if ($result->hasFailed()) {
-			return $result;
-		}
+    /**
+     * currently not implemented
+     *
+     * @param string $regex
+     *         the PCRE regex to test against
+     *
+     * @return ComparisonResult
+     */
+    public function matchesRegex($regex)
+    {
+        $result = $this->isExpectedType();
 
-		// is our string at least as long as the expected ending?
-		if (strlen($this->value) < strlen($expected)) {
-			// string is too short, cannot possibly start with the expected string
-			return $result;
-		}
+        if ($result->hasFailed()) {
+            return $result;
+        }
 
-		// get the start
-		$start = substr($this->value, 0, strlen($expected));
+        if (!preg_match($regex, $this->value)) {
+            $result->setHasFailed("matches $regex", $this->value);
+        }
 
-		// is it what we expected?
-		if ($start == $expected) {
-			$result->setHasFailed("does not start with '{$expected}'", "starts with '{$start}'");
-			return $result;
-		}
+        return $result;
+    }
 
-		// success - the starts are different
-		return $result;
-	}
+    /**
+     * currently not implemented
+     *
+     * @param string $regex
+     *         the PCRE regex to test against
+     *
+     * @return ComparisonResult
+     */
+    public function doesNotMatchRegex($regex)
+    {
+        $result = $this->matchesRegex($regex);
 
-	/**
-	* Given an array of possible values, is the current value in the list of possibilities?
-	*
-	* @param  array $expected
-	*         the array/list of possible values $this->value could be equal
-	*         to in order to pass
-	* @return ComparisonResult
-	*/
-	public function isIn($expected = array())
-	{
-		$result = $this->isExpectedType();
-		if ($result->hasFailed()) {
-			return $result;
-		}
+        if ($result->hasPassed()) {
+            $result->setHasFailed("does not match $regex", $this->value);
+        }
 
-		if (count($expected) == 0) {
-			$result->setHasFailed("value in array", "the array is empty");
-			return $result;
-		}
+        return $result;
+    }
 
-		if (!in_array($this->value, $expected)) {
-			$result->setHasFailed("value in array", "value is not in the array");
-			return $result;
-		}
+    /**
+     * does our string start with an expected string?
+     *
+     * @param string $expected the string we expect to start with
+     *
+     * @return ComparisonResult
+     */
+    public function startsWith($expected)
+    {
+        // do we have a string to test?
+        $result = $this->isExpectedType();
+        if ($result->hasFailed()) {
+            return $result;
+        }
 
-		// success!
-		$result->setHasPassed();
-		return $result;
-	}
+        // is our string at least as long as the expected ending?
+        if (strlen($this->value) < strlen($expected)) {
+            $result->setHasFailed("starts with '{$expected}'", "string too short");
+
+            return $result;
+        }
+
+        // get the beginning
+        $start = substr($this->value, 0, strlen($expected));
+
+        // is it what we expected?
+        if ($start != $expected) {
+            $result->setHasFailed("starts with '{$expected}'", "starts with '{$start}'");
+
+            return $result;
+        }
+
+        // success
+        return $result;
+    }
+
+    /**
+     * does our string NOT start with an expected string?
+     *
+     * @param string $expected the string we do NOT expect to start with
+     *
+     * @return ComparisonResult
+     */
+    public function doesNotStartWith($expected)
+    {
+        // do we have a string to test?
+        $result = $this->isExpectedType();
+        if ($result->hasFailed()) {
+            return $result;
+        }
+
+        // is our string at least as long as the expected ending?
+        if (strlen($this->value) < strlen($expected)) {
+            // string is too short, cannot possibly start with the expected string
+            return $result;
+        }
+
+        // get the start
+        $start = substr($this->value, 0, strlen($expected));
+
+        // is it what we expected?
+        if ($start == $expected) {
+            $result->setHasFailed("does not start with '{$expected}'", "starts with '{$start}'");
+
+            return $result;
+        }
+
+        // success - the starts are different
+        return $result;
+    }
+
+    /**
+     * Given an array of possible values, is the current value in the list of possibilities?
+     *
+     * @param array $expected
+     *         the array/list of possible values $this->value could be equal
+     *         to in order to pass
+     *
+     * @return ComparisonResult
+     */
+    public function isIn($expected = [])
+    {
+        $result = $this->isExpectedType();
+        if ($result->hasFailed()) {
+            return $result;
+        }
+
+        if (count($expected) == 0) {
+            $result->setHasFailed("value in array", "the array is empty");
+
+            return $result;
+        }
+
+        if (!in_array($this->value, $expected)) {
+            $result->setHasFailed("value in array", "value is not in the array");
+
+            return $result;
+        }
+
+        // success!
+        $result->setHasPassed();
+
+        return $result;
+    }
 }
