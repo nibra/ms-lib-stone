@@ -1,5 +1,6 @@
 {
   "name": "datasift/stone",
+  "version": "1.10.3",
   "description": "DataSift's in-house library for building QA tools",
   "homepage": "https://github.com/datasift/ms-lib-stone",
   "license": "BSD-3-Clause",
