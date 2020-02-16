@@ -97,18 +97,18 @@ abstract class ComparatorBase
 	abstract public function isExpectedType();
 
 	/**
-	 * Provide a comparible comparitor object for any type of variable
+	 * Provide a comparible comparator object for any type of variable
 	 *
-	 * @param  mixed $value the data we need a comparitor for
-	 * @return mixed        the appropriate comparitor object for $value
+	 * @param  mixed $value the data we need a comparator for
+	 * @return mixed        the appropriate comparator object for $value
 	 */
-	public function getComparitorFor($value)
+	public function getComparatorFor($value)
 	{
 		// what do we have?
 		$type = gettype($value);
 
 		// work out the classname we need
-		$className = __NAMESPACE__ . '\\' . ucfirst(strtolower($type)) . 'Comparitor';
+		$className = __NAMESPACE__ . '\\' . ucfirst(strtolower($type)) . 'Comparator';
 
 		// do we have one?
 		if (!class_exists($className)) {
@@ -116,10 +116,10 @@ abstract class ComparatorBase
 		}
 
 		// yes we do!
-		$comparitor = new $className($value);
+		$comparator = new $className($value);
 
 		// all done
-		return $comparitor;
+		return $comparator;
 	}
 
 	/**
@@ -157,10 +157,10 @@ abstract class ComparatorBase
 		// and then using the operating system's diff program to test
 		// the results
 
-		$expectedComparitor = $this->getComparitorFor($expected);
+		$expectedComparator = $this->getComparatorFor($expected);
 
 		// normalise the values that we are comparing
-		$sourceA = var_export($expectedComparitor->getValueForComparison(), true);
+		$sourceA = var_export($expectedComparator->getValueForComparison(), true);
 		$sourceB = var_export($this->getValueForComparison(), true);
 
 		// write both normalised values out to temporary files

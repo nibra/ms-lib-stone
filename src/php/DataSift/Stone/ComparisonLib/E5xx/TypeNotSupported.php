@@ -63,7 +63,7 @@ class E5xx_TypeNotSupported extends Exxx_Exception
 	 * constructor
 	 *
 	 * @param string $type
-	 *        the name of the PHP type that the comparitor does not support
+	 *        the name of the PHP type that the comparator does not support
 	 */
     public function __construct($type)
     {

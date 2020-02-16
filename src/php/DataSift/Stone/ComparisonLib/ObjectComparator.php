@@ -77,8 +77,8 @@ class ObjectComparator extends ComparatorBase
 
 		// fill out our array with our normalised data
 		foreach ($this->value as $key => $value) {
-			$comparitor = $this->getComparitorFor($value);
-			$intermediate[$key] = $comparitor->getValueForComparison();
+			$comparator = $this->getComparatorFor($value);
+			$intermediate[$key] = $comparator->getValueForComparison();
 		}
 
 		// sort the array, to make comparison sane
@@ -194,8 +194,8 @@ class ObjectComparator extends ComparatorBase
 		}
 
 		// compare the values of the two
-		$comparitor = $this->getComparitorFor($this->value->$attribute);
-		$result = $comparitor->equals($value);
+		$comparator = $this->getComparatorFor($this->value->$attribute);
+		$result = $comparator->equals($value);
 
 		// all done
 		return $result;
@@ -225,8 +225,8 @@ class ObjectComparator extends ComparatorBase
 		}
 
 		// compare the values of the two
-		$comparitor = $this->getComparitorFor($this->value->$attribute);
-		$result = $comparitor->doesNotEqual($value);
+		$comparator = $this->getComparatorFor($this->value->$attribute);
+		$result = $comparator->doesNotEqual($value);
 
 		// all done
 		return $result;

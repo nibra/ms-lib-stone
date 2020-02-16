@@ -64,7 +64,7 @@ class ComparisonResult
 	/**
 	 * what was the expected value in the comparison?
 	 *
-	 * this value should be the value passed into one of the comparitor's
+	 * this value should be the value passed into one of the comparator's
 	 * methods
 	 *
 	 * @var mixed
@@ -74,7 +74,7 @@ class ComparisonResult
 	/**
 	 * what was the actual value in the comparison?
 	 *
-	 * this value should be the value passed into the comparitor's
+	 * this value should be the value passed into the comparator's
 	 * constructor
 	 *
 	 * @var mixed

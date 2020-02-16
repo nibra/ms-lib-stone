@@ -75,8 +75,8 @@ class ArrayComparator extends ComparatorBase
 		// sort any sub-arrays
 		foreach ($return as $key => $value)
 		{
-			$comparitor   = $this->getComparitorFor($value);
-			$return[$key] = $comparitor->getValueForComparison();
+			$comparator   = $this->getComparatorFor($value);
+			$return[$key] = $comparator->getValueForComparison();
 		}
 
 		// all done
